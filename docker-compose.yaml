@@ -6,11 +6,9 @@ services:
       args:
         VERSION: ${VERSION:-0.7.0}
     image: mtr-exporter:${VERSION:-0.7.0}
-    ports:
-      - "${MTR_PORT:-8080}:8080"
-    # mtr sends ICMP and needs a raw socket. The reported path starts in
-    # the container network. On Linux, set network_mode: host and drop
-    # the ports mapping to measure from the host network namespace.
+    # Share the host network so mtr measures the host path and the
+    # exporter is available at 127.0.0.1:8080. ports: is ignored here.
+    network_mode: host
     cap_add:
       - NET_RAW
     restart: unless-stopped
@@ -18,7 +16,7 @@ services:
       - ./helpers/mtr-jobs.example:/etc/mtr-exporter/jobs:ro
     command:
       - "-bind"
-      - ":8080"
+      - "127.0.0.1:8080"
       - "-jobs"
       - "/etc/mtr-exporter/jobs"
       - "-watch-jobs"
