@@ -1,0 +1,15 @@
+# mtr-exporter jobs file
+#
+# label -- schedule -- mtr-flags
+#
+# schedule is a cron expression ("10 * * * *"), a predefined name (@hourly),
+# or @every <duration>. A trailing ~<duration> adds a random delay so the
+# probes do not all start at the same moment.
+#
+# Each line is one mtr run and therefore one target. Metrics for every job
+# are exposed on the same /metrics endpoint, labeled with mtr_exporter_job.
+
+example.com      -- @every 60s      -- -c 5 -n example.com
+golang.org       -- @every 60s ~10s -- -c 5 -n golang.org
+prometheus.io    -- @every 60s ~20s -- -c 5 -n prometheus.io
+www.bitwizard.nl -- @every 60s ~30s -- -c 5 -n www.bitwizard.nl

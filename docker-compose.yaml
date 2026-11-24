@@ -14,16 +14,15 @@ services:
     cap_add:
       - NET_RAW
     restart: unless-stopped
+    volumes:
+      - ./helpers/mtr-jobs.example:/etc/mtr-exporter/jobs:ro
     command:
       - "-bind"
       - ":8080"
-      - "-schedule"
-      - "${MTR_SCHEDULE:-@every 60s}"
-      - "--"
-      - "-c"
-      - "${MTR_CYCLES:-5}"
-      - "-n"
-      - "${MTR_TARGET:-example.com}"
+      - "-jobs"
+      - "/etc/mtr-exporter/jobs"
+      - "-watch-jobs"
+      - "@every 30s"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/health"]
       interval: 30s
